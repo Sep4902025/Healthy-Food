@@ -37,7 +37,7 @@ const RecipeModal = ({ dishId, recipeId, onClose }) => {
   }, [dishId, recipeId]);
 
   if (!recipe || !dish || servingSize === null)
-    return <p className="text-center mt-10 text-gray-500">Recipe not found!</p>;
+    return <p className="text-center mt-10 text-gray-500">Loading...</p>;
 
   const calculateQuantity = (originalQuantity) => {
     const ratio = servingSize / dish.totalServing;

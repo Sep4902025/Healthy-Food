@@ -13,9 +13,7 @@ const MedicalConditionCard = React.memo(({ condition, onClick, observeRef }) => 
     className="bg-white shadow-lg rounded-2xl p-6 border border-gray-100 cursor-pointer hover:shadow-xl hover:border-[#40B491] hover:scale-105 transition-all duration-300 flex flex-col bg-gradient-to-br from-white to-[#40B491]/5 min-h-[180px]"
     onClick={() => onClick(condition._id)}
   >
-    <h2 className="text-2xl font-extrabold text-[#40B491] mb-4 font-['Syne']">
-      {condition.name}
-    </h2>
+    <h2 className="text-2xl font-extrabold text-[#40B491] mb-4 ">{condition.name}</h2>
     <p className="text-gray-700 text-base leading-relaxed flex-grow line-clamp-3">
       {condition.description || "Learn more about this condition and its dietary impacts."}
     </p>
@@ -153,7 +151,7 @@ const Medical = () => {
 
   return (
     <div className="container mx-auto px-6 py-12 bg-gray-50">
-      <h1 className="text-4xl font-extrabold text-center mb-10 font-['Syne'] text-[#40B491]">
+      <h1 className="text-4xl font-extrabold text-center mb-10  text-[#40B491]">
         Health Conditions
       </h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-8">

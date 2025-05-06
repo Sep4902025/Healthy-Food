@@ -8,13 +8,14 @@ import { FaSearch, FaSignOutAlt } from "react-icons/fa";
 import { selectUser } from "../store/selectors/authSelectors";
 import { logoutUser } from "../store/actions/authActions";
 import { DarkModeContext } from "../pages/context/DarkModeContext";
-
 import PreviewModal from "../pages/user/MealPlan/PreviewModal";
 import HomeService from "../services/home.service";
 import ReminderNotification from "./Reminder/ReminderNotifiaction";
-
 import { useSearch } from "../pages/context/SearchContext";
 import Cart from "../pages/user/MealPlan/Cart";
+
+// Define valid dish types (dựa trên dữ liệu dự kiến từ BE)
+const VALID_DISH_TYPES = ["Heavy Meals", "Light Meals", "Desserts", "Beverages"]; // Điều chỉnh theo dữ liệu thực tế từ BE
 
 const Header = () => {
   const navigate = useNavigate();
@@ -29,9 +30,7 @@ const Header = () => {
   const { darkMode, toggleDarkMode } = useContext(DarkModeContext);
   const [hasCompletedQuiz, setHasCompletedQuiz] = useState(false);
   const [mealPlans, setMealPlans] = useState([]);
-  console.log("MLU", mealPlans);
-
-  const [isLoadingMealPlans, setIsLoadingMealPlans] = useState(false); // New loading state
+  const [isLoadingMealPlans, setIsLoadingMealPlans] = useState(false);
   const [previewModalOpen, setPreviewModalOpen] = useState(false);
   const [previewData, setPreviewData] = useState(null);
   const [paymentHistory, setPaymentHistory] = useState([]);
@@ -43,35 +42,27 @@ const Header = () => {
   const [inputValue, setInputValue] = useState("");
   const [debounceTimer, setDebounceTimer] = useState(null);
 
-  // Debug user changes
   useEffect(() => {
     console.log("User changed:", user);
   }, [user]);
 
-  // Debug mealPlans state changes
   useEffect(() => {
     console.log("mealPlans state updated:", mealPlans);
   }, [mealPlans]);
 
-  // Debug activeTab changes
   useEffect(() => {
     console.log("activeTab changed:", activeTab);
   }, [activeTab]);
 
-  // Debounce search input
   useEffect(() => {
     if (debounceTimer) clearTimeout(debounceTimer);
-
     const timer = setTimeout(() => {
       setSearchTerm(inputValue);
     }, 500);
-
     setDebounceTimer(timer);
-
     return () => clearTimeout(timer);
   }, [inputValue]);
 
-  // Check query parameters to display toast
   useEffect(() => {
     const query = new URLSearchParams(location.search);
     const paymentStatus = query.get("paymentStatus");
@@ -96,7 +87,6 @@ const Header = () => {
     [location.pathname]
   );
 
-  // Check user preference
   useEffect(() => {
     console.log("user data", user);
     if (user?.userPreferenceId) {
@@ -106,11 +96,10 @@ const Header = () => {
     }
   }, [user]);
 
-  // Fetch unpaid meal plans
   useEffect(() => {
     const fetchUnpaidMealPlans = async () => {
       if (user) {
-        setIsLoadingMealPlans(true); // Set loading state
+        setIsLoadingMealPlans(true);
         try {
           const response = await mealPlanService.getUnpaidMealPlanForUser(user._id);
           console.log("API Response for unpaid meal plans:", response);
@@ -125,14 +114,13 @@ const Header = () => {
           console.error("Error fetching unpaid meal plans:", error);
           setMealPlans([]);
         } finally {
-          setIsLoadingMealPlans(false); // Clear loading state
+          setIsLoadingMealPlans(false);
         }
       }
     };
     fetchUnpaidMealPlans();
   }, [user]);
 
-  // Fetch payment history
   useEffect(() => {
     const fetchPaymentHistory = async () => {
       if (user) {
@@ -153,7 +141,6 @@ const Header = () => {
     fetchPaymentHistory();
   }, [user]);
 
-  // Handle clicking "Profile"
   const handleProfileClick = () => {
     if (user?.role === "admin") {
       navigate(`/admin/adminprofile/${user._id}`, { state: { user } });
@@ -169,9 +156,12 @@ const Header = () => {
         const response = await HomeService.getIngredientsGroupedByType();
         if (response.status === "success") {
           setCategories(response.data.map((group) => group._id));
+        } else {
+          setCategories([]); // Đặt giá trị mặc định nếu API thất bại
         }
       } catch (error) {
         console.error("Error fetching categories:", error);
+        setCategories([]); // Xử lý lỗi an toàn
       }
     };
     fetchCategories();
@@ -183,16 +173,22 @@ const Header = () => {
       try {
         const response = await HomeService.getDishesGroupedByType();
         if (response.status === "success") {
-          setDishTypes(response.data.map((group) => group._id));
+          // Lọc chỉ lấy các dish types hợp lệ
+          const types = response.data
+            .map((group) => group._id)
+            .filter((type) => VALID_DISH_TYPES.includes(type));
+          setDishTypes(types);
+        } else {
+          setDishTypes([]); // Đặt giá trị mặc định nếu API thất bại
         }
       } catch (error) {
         console.error("Error fetching dish types:", error);
+        setDishTypes([]); // Xử lý lỗi an toàn
       }
     };
     fetchDishTypes();
   }, []);
 
-  // Handle click outside to close dropdowns
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (!event.target.closest(".dropdown-container")) {
@@ -242,7 +238,6 @@ const Header = () => {
         mealPlan._id,
         mealPlan.price || 1500000
       );
-
       if (response.success && response.paymentUrl) {
         window.location.href = response.paymentUrl;
       } else {
@@ -271,14 +266,10 @@ const Header = () => {
 
   return (
     <div className="w-full bg-white shadow-sm py-2 sticky top-0 z-50">
-      {/* Main Header */}
       <div className="flex items-center justify-between px-4">
-        {/* Logo */}
         <div className="flex items-center cursor-pointer" onClick={() => navigate("/")}>
           <img src={logo} alt="Healthy Food" className="h-12" />
         </div>
-
-        {/* Primary Navigation - Center */}
         <div className="flex items-center justify-center gap-2">
           <a
             href="/"
@@ -325,7 +316,6 @@ const Header = () => {
                   Survey
                 </a>
               )}
-
               <a
                 href="/mealplan"
                 className={`font-medium transition-colors ${
@@ -337,10 +327,7 @@ const Header = () => {
             </>
           )}
         </div>
-
-        {/* Right Side - Search, Icons, User */}
         <div className="flex items-center space-x-4">
-          {/* Search Bar */}
           <div className="relative">
             <input
               type="text"
@@ -351,11 +338,8 @@ const Header = () => {
             />
             <FaSearch className="absolute left-3 top-2 text-gray-500 text-sm" />
           </div>
-
-          {/* Icons & Auth */}
           {user ? (
             <div className="flex items-center space-x-4">
-              {/* Cart Component */}
               <Cart
                 cartMenuOpen={cartMenuOpen}
                 toggleCartMenu={toggleCartMenu}
@@ -369,11 +353,7 @@ const Header = () => {
                 handlePayMealPlan={handlePayMealPlan}
                 handlePreviewMealPlan={handlePreviewMealPlan}
               />
-
-              {/* ReminderNotification */}
               <ReminderNotification userId={user?._id} />
-
-              {/* User Menu */}
               <div className="relative" ref={userMenuRef}>
                 <img
                   src={
@@ -419,14 +399,12 @@ const Header = () => {
         </div>
       </div>
 
-      {/* Preview Modal */}
       <PreviewModal
         isOpen={previewModalOpen}
         onClose={() => setPreviewModalOpen(false)}
         previewData={previewData}
       />
 
-      {/* Secondary Navigation - Categories */}
       <div className="border-t mt-2 pt-2">
         <div className="flex px-4 space-x-6">
           <div className="relative dropdown-container">
@@ -459,7 +437,6 @@ const Header = () => {
               </ul>
             )}
           </div>
-
           <div className="relative dropdown-container">
             <button
               onClick={() => toggleDropdown("ingredients")}
@@ -492,7 +469,6 @@ const Header = () => {
               </ul>
             )}
           </div>
-
           <a
             href="/medical"
             className={`font-medium transition-colors ${

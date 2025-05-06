@@ -59,7 +59,6 @@ const HomeService = {
   getDishesByType: async (type) => {
     try {
       const response = await axiosInstance.get(`/home/dishes/type/${type}`);
-      console.log("DAAAAAATAAAAAAAa", response);
 
       return response.data;
     } catch (error) {

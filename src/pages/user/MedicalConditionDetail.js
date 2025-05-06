@@ -211,7 +211,7 @@ const MedicalConditionDetail = () => {
           >
             <ArrowLeft className="w-6 h-6 mr-2" /> Back to Health Conditions
           </button>
-          <h1 className="text-4xl md:text-5xl font-extrabold font-['Syne'] mb-4">{condition.name}</h1>
+          <h1 className="text-4xl md:text-5xl font-extrabold  mb-4">{condition.name}</h1>
         </div>
       </header>
 
@@ -220,7 +220,7 @@ const MedicalConditionDetail = () => {
         <div className="max-w-4xl mx-auto bg-white rounded-2xl shadow-lg p-8">
           <div
             className="text-gray-700 text-lg mb-8 leading-relaxed whitespace-pre-wrap"
-            dangerouslySetInnerHTML={{ __html: condition.description.replace(/\n/g, '<br />') }}
+            dangerouslySetInnerHTML={{ __html: condition.description.replace(/\n/g, "<br />") }}
           />
 
           {/* Recommended Foods */}

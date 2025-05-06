@@ -32,7 +32,9 @@ const IngredientList = () => {
 
   return (
     <div className="container mx-auto px-6 py-8">
-      <h1 className="text-3xl font-bold text-center mb-6">Ingredients of Type: {type}</h1>
+      <h1 className="text-3xl font-bold text-center mb-6 text-custom-green">
+        Ingredients of Type: {type}
+      </h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
         {displayedIngredients.map((ingredient) => (
           <div
@@ -47,10 +49,21 @@ const IngredientList = () => {
             <h2 className="text-xl font-semibold">{ingredient.name}</h2>
             <p className="text-gray-600 text-sm">{ingredient.description}</p>
             <div className="mt-2 text-sm text-gray-700">
-              <p className="flex items-center gap-2"><FaFire className="text-red-500" /> <strong>Calories:</strong> {ingredient.calories} kcal</p>
-              <p className="flex items-center gap-2"><FaDrumstickBite className="text-blue-500" /> <strong>Protein:</strong> {ingredient.protein}g</p>
-              <p className="flex items-center gap-2"><FaBreadSlice className="text-yellow-500" /> <strong>Carbs:</strong> {ingredient.carbs}g</p>
-              <p className="flex items-center gap-2"><FaTint className="text-green-500" /> <strong>Fat:</strong> {ingredient.fat}g</p>
+              <p className="flex items-center gap-2">
+                <FaFire className="text-red-500" /> <strong>Calories:</strong> {ingredient.calories}{" "}
+                kcal
+              </p>
+              <p className="flex items-center gap-2">
+                <FaDrumstickBite className="text-blue-500" /> <strong>Protein:</strong>{" "}
+                {ingredient.protein}g
+              </p>
+              <p className="flex items-center gap-2">
+                <FaBreadSlice className="text-yellow-500" /> <strong>Carbs:</strong>{" "}
+                {ingredient.carbs}g
+              </p>
+              <p className="flex items-center gap-2">
+                <FaTint className="text-green-500" /> <strong>Fat:</strong> {ingredient.fat}g
+              </p>
             </div>
           </div>
         ))}

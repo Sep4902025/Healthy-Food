@@ -299,7 +299,7 @@ const ForYouPage = () => {
       )}
 
       <div className="p-6 flex items-center justify-between mb-8">
-        <h2 className="text-[48px] md:text-[56px] font-bold font-['Syne'] text-[#40b491] dark:text-white">
+        <h2 className="text-[48px] md:text-[56px] font-bold  text-[#40b491] dark:text-white">
           Recipes by Category
         </h2>
         <div className="flex space-x-2">
@@ -346,7 +346,7 @@ const ForYouPage = () => {
       </Slider>
 
       <div className="mt-12">
-        <h2 className="text-[48px] md:text-[56px] font-bold font-['Syne'] text-white bg-[#40b491] py-6 px-6 rounded-lg">
+        <h2 className="text-[48px] md:text-[56px] font-bold  text-white bg-[#40b491] py-6 px-6 rounded-lg">
           Recommended for You
         </h2>
       </div>

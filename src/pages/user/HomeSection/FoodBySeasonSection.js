@@ -126,7 +126,7 @@ const FoodBySeasonSection = ({ userId, selectedSeason }) => {
 
   return (
     <div className="py-6">
-      <h2 className="text-4xl font-bold font-['Syne'] text-white bg-[#40b491] py-4 px-6 rounded-lg text-left mb-6">
+      <h2 className="text-4xl font-bold  text-white bg-[#40b491] py-4 px-6 rounded-lg text-left mb-6">
         {selectedSeason} Recipes
       </h2>
 

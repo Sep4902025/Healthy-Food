@@ -6,7 +6,7 @@ import { selectAuth } from "../../store/selectors/authSelectors";
 import IngredientService from "../../services/nutritionist/ingredientsServices";
 import DishService from "../../services/nutritionist/dishesServices";
 
-import {Timer } from "lucide-react";
+import { Timer } from "lucide-react";
 
 import ReviewSection from "./ReviewSection";
 import recipesService from "../../services/nutritionist/recipesServices";
@@ -44,7 +44,7 @@ const RecipeApp = () => {
     fetchRecipe();
   }, [recipeId]);
 
-  if (!recipe || !dish) return <p className="text-center mt-10 text-gray-500">Recipe not found!</p>;
+  if (!recipe || !dish) return <p className="text-center mt-10 text-gray-500">Recipe loading...</p>;
 
   return (
     <div className="p-6 bg-gray-100 min-h-screen w-full flex flex-col items-center">
