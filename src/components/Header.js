@@ -9,13 +9,21 @@ import { selectUser } from "../store/selectors/authSelectors";
 import { logoutUser } from "../store/actions/authActions";
 import { DarkModeContext } from "../pages/context/DarkModeContext";
 import PreviewModal from "../pages/user/MealPlan/PreviewModal";
-import HomeService from "../services/home.service";
 import ReminderNotification from "./Reminder/ReminderNotifiaction";
 import { useSearch } from "../pages/context/SearchContext";
 import Cart from "../pages/user/MealPlan/Cart";
 
-// Define valid dish types (dựa trên dữ liệu dự kiến từ BE)
-const VALID_DISH_TYPES = ["Heavy Meals", "Light Meals", "Desserts", "Beverages"]; // Điều chỉnh theo dữ liệu thực tế từ BE
+// Define static dish types and categories
+const VALID_DISH_TYPES = ["Heavy Meals", "Light Meals", "Desserts", "Beverages"];
+const STATIC_CATEGORIES = [
+  "Eggs & Dairy",
+  "Dried & Processed Ingredients",
+  "Others",
+  "Vegetables & Roots",
+  "Meat & Seafood",
+  "Spices & Herbs",
+  "Grains & Beans",
+];
 
 const Header = () => {
   const navigate = useNavigate();
@@ -25,8 +33,8 @@ const Header = () => {
   const [activeDropdown, setActiveDropdown] = useState(null);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [cartMenuOpen, setCartMenuOpen] = useState(false);
-  const [categories, setCategories] = useState([]);
-  const [dishTypes, setDishTypes] = useState([]);
+  const [categories] = useState(STATIC_CATEGORIES);
+  const [dishTypes] = useState(VALID_DISH_TYPES);
   const { darkMode, toggleDarkMode } = useContext(DarkModeContext);
   const [hasCompletedQuiz, setHasCompletedQuiz] = useState(false);
   const [mealPlans, setMealPlans] = useState([]);
@@ -61,7 +69,7 @@ const Header = () => {
     }, 500);
     setDebounceTimer(timer);
     return () => clearTimeout(timer);
-  }, [inputValue]);
+  }, [inputValue, setSearchTerm]);
 
   useEffect(() => {
     const query = new URLSearchParams(location.search);
@@ -148,46 +156,6 @@ const Header = () => {
       navigate("/user");
     }
   };
-
-  // Fetch categories
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const response = await HomeService.getIngredientsGroupedByType();
-        if (response.status === "success") {
-          setCategories(response.data.map((group) => group._id));
-        } else {
-          setCategories([]); // Đặt giá trị mặc định nếu API thất bại
-        }
-      } catch (error) {
-        console.error("Error fetching categories:", error);
-        setCategories([]); // Xử lý lỗi an toàn
-      }
-    };
-    fetchCategories();
-  }, []);
-
-  // Fetch dish types
-  useEffect(() => {
-    const fetchDishTypes = async () => {
-      try {
-        const response = await HomeService.getDishesGroupedByType();
-        if (response.status === "success") {
-          // Lọc chỉ lấy các dish types hợp lệ
-          const types = response.data
-            .map((group) => group._id)
-            .filter((type) => VALID_DISH_TYPES.includes(type));
-          setDishTypes(types);
-        } else {
-          setDishTypes([]); // Đặt giá trị mặc định nếu API thất bại
-        }
-      } catch (error) {
-        console.error("Error fetching dish types:", error);
-        setDishTypes([]); // Xử lý lỗi an toàn
-      }
-    };
-    fetchDishTypes();
-  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
